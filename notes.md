@@ -22,7 +22,70 @@ leetcode105
 代码如下：
 
 ```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return build(preorder, inorder);
+    }
+    public TreeNode build(int[] preorder, int[] inorder) {
+        TreeNode root = new TreeNode(preorder[0]);
+        int left_len = 0;
+        int right_len = 0;
+        for(int i = 0; i < inorder.length; i++) {
+            if(inorder[i] == root.val) {
+                left_len = i;
+                right_len = inorder.length - i - 1;
+                break;
+            }
+        }
+        TreeNode left;
+        TreeNode right;
+        if(left_len == 0) {
+            left = null;
+        }
+        else {
+            int[] lpre = new int[left_len];
+            int[] lin = new int[left_len];
+            for(int i = 0; i < left_len; i++) {
+                lpre[i] = preorder[i+1];
+                lin[i] = inorder[i];
+            }
+            left = build(lpre, lin);
+        }
+        if(right_len == 0) {
+            right = null;
+        }
+        else {
+            int[] rpre = new int[right_len];
+            int[] rin = new int[right_len];
+            for(int i = 0; i < right_len; i++) {
+                rpre[i] = preorder[i+left_len+1];
+                rin[i] = inorder[left_len+1+i];
+            }
 
+            right = build(rpre, rin);
+        }
+        root.left = left;
+        root.right = right;
+        return root;
+    }
+}
 ```
 
 
+
+# 排序相关
